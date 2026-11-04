@@ -1,0 +1,21 @@
+{
+  "name": "internal-ledger-platform",
+  "private": true,
+  "workspaces": [
+    "shared",
+    "server",
+    "web"
+  ],
+  "scripts": {
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose stop db",
+    "migrate": "npm -w server run migrate",
+    "seed": "npm -w server run seed",
+    "seed:reset": "npm -w server run seed -- --reset",
+    "dev:server": "npm -w server run dev",
+    "dev:web": "npm -w web run dev",
+    "test": "npm -w server run test",
+    "typecheck": "npm -w shared run typecheck && npm -w server run typecheck && npm -w web run typecheck",
+    "build": "npm -w web run build && npm -w server run build"
+  }
+}

@@ -1,0 +1,47 @@
+# 内部账目管理平台
+#   开发 / 测试：docker compose up -d db          （仅数据库，端口 5433）
+#   部署：      docker compose up -d --build       （数据库 + 应用，访问 http://服务器:8080）
+services:
+  db:
+    container_name: internalLedgerpPlatformDb
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ledger
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-ledger}
+      POSTGRES_DB: ledger
+      TZ: Asia/Shanghai
+      PGTZ: Asia/Shanghai
+    ports:
+      - "${DB_PORT:-5433}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ledger -d ledger"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  app:
+    container_name: internalLedgerpPlatformApp
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://ledger:${DB_PASSWORD:-ledger}@db:5432/ledger
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+      ATTACHMENT_DIR: /data/attachments
+      BACKUP_DIR: /data/backups
+      TZ: Asia/Shanghai
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    volumes:
+      - appdata:/data
+
+volumes:
+  pgdata:
+  appdata:

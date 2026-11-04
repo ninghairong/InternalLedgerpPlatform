@@ -1,0 +1,8 @@
+body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+.num { font-variant-numeric: tabular-nums; }
+.page-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.page-title h4 { margin: 0 !important; }
+.ant-table-row { cursor: default; }
+.clickable-rows .ant-table-row { cursor: pointer; }
+.row-pending td { background: #fffbe6 !important; }
+.row-dead td { color: #bfbfbf !important; text-decoration: line-through; }

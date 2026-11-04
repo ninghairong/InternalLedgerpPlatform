@@ -1,0 +1,9 @@
+{
+  "name": "@ledger/shared",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": { ".": "./src/index.ts", "./*": "./src/*.ts" },
+  "scripts": { "typecheck": "tsc --noEmit -p ." },
+  "dependencies": { "exceljs": "^4.4.0" }
+}
