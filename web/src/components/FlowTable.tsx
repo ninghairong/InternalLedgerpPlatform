@@ -129,7 +129,7 @@ export function FlowTable({
 
   return (
     <>
-      <Space style={{ marginBottom: 8 }}>
+      <Space wrap style={{ marginBottom: 8 }}>
         <Button
           size="small"
           icon={<DownloadOutlined />}
@@ -158,6 +158,7 @@ export function FlowTable({
         rowKey="id"
         columns={columns}
         dataSource={flows}
+        scroll={{ x: showRunningBalance ? 1130 : 1000 }}
         pagination={{ pageSize, showSizeChanger: true, showTotal: (t) => `共 ${t} 条` }}
         rowClassName={(f) => (f.status === 'VOIDED' || f.status === 'REVERSED' ? 'row-dead' : '')}
         onRow={(f) => ({ onClick: () => ui.openFlow(f.id) })}

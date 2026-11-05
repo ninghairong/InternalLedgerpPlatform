@@ -51,13 +51,13 @@ export default function TraceDetail() {
           }
         />
       )}
-      <Row gutter={16}>
-        <Col span={17}>
+      <Row gutter={[16, 16]}>
+        <Col xs={24} lg={17}>
           <Card size="small" title="资金流向">
             <TraceGraph trace={t} height={420} />
           </Card>
         </Col>
-        <Col span={7}>
+        <Col xs={24} lg={7}>
           <Card size="small" title="资金去向汇总">
             <Descriptions column={1} size="small">
               <Descriptions.Item label="首次进入主体">{entMap.get(t.originEntityId ?? '')?.name ?? '—'}</Descriptions.Item>

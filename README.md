@@ -1,12 +1,12 @@
 # 内部账目管理平台
 
-记录 30 家公司主体的每一笔资金流转：以项目为单位管理，公户、个人卡、现金逐笔强制溯源，资金链可从任意一笔来款追到最终去向。需求见 [docs/需求方案.md](docs/需求方案.md)，部署见 [docs/部署与运维.md](docs/部署与运维.md)。
+记录 30 家公司主体的每一笔资金流转：以项目为单位管理，公户、个人卡、现金逐笔强制溯源，资金链可从任意一笔来款追到最终去向。部署见 [docs/部署与运维.md](docs/部署与运维.md)。电脑与手机浏览器均可使用（屏幕宽度小于 768px 时自动切换为手机布局）。
 
 ## 目录
 
 ```
 shared/   前后端共用：数据模型、溯源分配与资金链计算、Excel 模板 / 解析 / 导出、导入校验、税负测算
-server/   后端：Fastify + postgres.js；业务服务、接口、集成测试
+server/   后端：Fastify + postgres.js；业务服务、接口
 web/      前端：React + Ant Design + ECharts
 db/       数据库迁移脚本（关键规则由触发器在数据库层保证）
 scripts/  备份 / 恢复脚本
@@ -27,7 +27,6 @@ npm run dev:web                  # 前端 http://localhost:5173（/api 转发到
 演示账号：`admin / admin123`（管理员）、`caiwu / demo1234`（财务）、`boss / demo1234`（只读）。
 
 ```bash
-npm test                         # 后端集成测试（连接 ledger_test，每个测试文件前清空重建）
 npm run typecheck                # 三个包的类型检查
 ```
 

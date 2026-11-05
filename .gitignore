@@ -4,3 +4,13 @@ dist
 *.log
 .env
 /data
+*.tsbuildinfo
+
+# 以下文件只在本地使用，在线部署用不到，不提交到仓库（本地保留）
+/excel/
+/require.md
+/docs/需求方案.md
+/docs/业务需求方案.md
+/server/test/
+/backups/
+.workbuddy/

@@ -1,8 +1,63 @@
-body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; -webkit-text-size-adjust: 100%; }
 .num { font-variant-numeric: tabular-nums; }
-.page-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.page-title { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; margin-bottom: 16px; }
 .page-title h4 { margin: 0 !important; }
 .ant-table-row { cursor: default; }
 .clickable-rows .ant-table-row { cursor: pointer; }
 .row-pending td { background: #fffbe6 !important; }
 .row-dead td { color: #bfbfbf !important; text-decoration: line-through; }
+/* 弹层任何情况下都不超出屏幕 */
+.ant-drawer-content-wrapper { max-width: 100vw; }
+
+/* ---------- 手机端（< 768px） ---------- */
+@media (max-width: 767px) {
+  .page-title { align-items: flex-start; margin-bottom: 12px; }
+  .page-title h4 { font-size: 18px !important; }
+
+  /* 卡片、标签页留白收紧 */
+  .ant-card .ant-card-body { padding: 12px; }
+  .ant-card .ant-card-head { padding: 0 12px; }
+  .ant-tabs-nav { margin-bottom: 12px !important; }
+  .ant-statistic-title { font-size: 12px; }
+  .ant-statistic-content { font-size: 18px !important; }
+  .ant-statistic-content-value { word-break: break-all; }
+
+  /* 横向排列的元素放不下时自动换行 */
+  .ant-space-horizontal { flex-wrap: wrap; }
+
+  /* 表格：整体横向滑动，单元格不再被挤成一列一个字 */
+  .ant-table-content { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .ant-table-content > table[style*='table-layout: auto'] { width: max-content !important; min-width: 100%; }
+  .ant-table-content > table[style*='table-layout: auto'] > * > tr > .ant-table-cell { white-space: nowrap; }
+  .ant-table-pagination.ant-pagination { flex-wrap: wrap; row-gap: 8px; justify-content: center !important; }
+
+  /* 筛选栏：输入框、下拉框占满一行 */
+  .filter-bar { display: flex !important; width: 100%; }
+  .filter-bar > .ant-space-item:has(.ant-select, .ant-picker, .ant-input-search) { flex: 1 1 100%; }
+  .filter-bar .ant-select, .filter-bar .ant-picker, .filter-bar .ant-input-search { width: 100% !important; }
+  .filter-bar .ant-segmented { max-width: 100%; overflow-x: auto; }
+
+  /* 抽屉：标题与操作按钮分两行 */
+  .ant-drawer-header { flex-wrap: wrap; row-gap: 8px; padding: 12px 16px !important; }
+  .ant-drawer .ant-drawer-header .ant-drawer-header-title { flex: 1 1 100% !important; min-width: 0; }
+  .ant-drawer .ant-drawer-header .ant-drawer-extra { flex: 1 1 100% !important; }
+  .ant-drawer-body { padding: 12px !important; }
+
+  /* 弹窗贴近全屏，内容区可滚动 */
+  .ant-modal { top: 12px !important; padding-bottom: 12px !important; }
+  .ant-modal .ant-modal-content { padding: 16px 14px; }
+  .ant-modal-footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+  .ant-modal-footer > .ant-btn + .ant-btn { margin-inline-start: 0 !important; }
+
+  /* 列表：操作区换到说明文字下方 */
+  .ant-list .ant-list-item { flex-wrap: wrap !important; row-gap: 8px; }
+  .ant-list .ant-list-item .ant-list-item-meta { flex: 1 1 100% !important; }
+  .ant-list .ant-list-item .ant-list-item-action { margin-inline-start: 0 !important; }
+
+  /* 上传拖拽区高度随内容 */
+  .ant-upload-wrapper .ant-upload-drag { height: auto !important; }
+
+  /* 日期范围选择弹层单月显示，避免超出屏幕 */
+  .ant-picker-dropdown .ant-picker-panels { flex-direction: column; }
+  .ant-picker-dropdown .ant-picker-range-wrapper { max-width: calc(100vw - 16px); }
+}

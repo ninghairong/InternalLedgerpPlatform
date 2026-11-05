@@ -148,7 +148,7 @@ export default function ProjectDetail() {
           </>
         }
       />
-      <Row gutter={16} style={{ marginBottom: 16 }}>
+      <Row gutter={[12, 12]} style={{ marginBottom: 16 }}>
         {[
           ['合同额', project.contractAmount, undefined],
           ['已收款', income, '#389e0d'],
@@ -157,7 +157,7 @@ export default function ProjectDetail() {
           ['预算余额', budgetTotal - expense, budgetTotal - expense < 0 ? '#cf1322' : undefined],
           ['滞留个人资金', held, held > 0 ? '#722ed1' : undefined],
         ].map(([t, v, c]) => (
-          <Col span={4} key={t as string}>
+          <Col xs={12} sm={8} xl={4} key={t as string}>
             <Card size="small">
               <Statistic title={t as string} value={moneyShort(v as number)} valueStyle={{ color: c as string | undefined, fontSize: 20 }} />
             </Card>
@@ -171,8 +171,8 @@ export default function ProjectDetail() {
               key: 'overview',
               label: '概览',
               children: (
-                <Row gutter={24}>
-                  <Col span={14}>
+                <Row gutter={[24, 16]}>
+                  <Col xs={24} lg={14}>
                     <Typography.Title level={5}>预算 vs 实际</Typography.Title>
                     {budgetRows.length ? (
                       <ReactECharts
@@ -193,7 +193,7 @@ export default function ProjectDetail() {
                       <Empty description="暂无支出" />
                     )}
                   </Col>
-                  <Col span={10}>
+                  <Col xs={24} lg={10}>
                     <Typography.Title level={5}>支出构成</Typography.Title>
                     <ReactECharts
                       style={{ height: 260 }}
@@ -229,12 +229,12 @@ export default function ProjectDetail() {
               label: '发票与税费',
               children: (
                 <>
-                  <Descriptions bordered size="small" column={4} style={{ marginBottom: 16 }}>
+                  <Descriptions bordered size="small" column={{ xs: 1, sm: 2, xl: 4 }} style={{ marginBottom: 16 }}>
                     <Descriptions.Item label="纳税人身份">{general ? '一般纳税人' : '小规模纳税人'}</Descriptions.Item>
                     <Descriptions.Item label="销项税额">¥{money(outTax)}</Descriptions.Item>
                     <Descriptions.Item label={general ? '可抵扣进项（专票）' : '进项（不可抵扣，计入成本）'}>¥{money(general ? inTax : input.reduce((s, i) => s + i.taxAmount, 0))}</Descriptions.Item>
                     <Descriptions.Item label="应纳增值税（估）">¥{money(vat)}</Descriptions.Item>
-                    <Descriptions.Item label="附加税（估）" span={4}>
+                    <Descriptions.Item label="附加税（估）" span="filled">
                       ¥{money(surcharge)}　<Typography.Text type="secondary">{general ? '城建 7% + 教育附加 3% + 地方教育附加 2%' : '同左，叠加"六税两费"减半'}；正式计算按主体申报期汇总，见"发票与税费"</Typography.Text>
                     </Descriptions.Item>
                   </Descriptions>

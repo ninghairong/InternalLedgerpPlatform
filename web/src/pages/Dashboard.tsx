@@ -102,36 +102,36 @@ export default function Dashboard() {
           }
         />
       )}
-      <Row gutter={16}>
-        <Col span={5}>
+      <Row gutter={[16, 16]}>
+        <Col xs={12} lg={5}>
           <Card>
             <Statistic title={`对公账户余额（${corporate.length} 个账户）`} value={money(corporateTotal)} prefix="¥" />
           </Card>
         </Col>
-        <Col span={5}>
+        <Col xs={12} lg={5}>
           <Card>
             <Statistic title={<Tooltip title="内部个人账户与现金账户余额合计，即员工手中的公司资金">个人代管资金</Tooltip>} value={money(internalTotal)} prefix="¥" valueStyle={{ color: internalTotal > 0 ? '#722ed1' : undefined }} />
           </Card>
         </Col>
-        <Col span={5}>
+        <Col xs={12} lg={5}>
           <Card>
             <Statistic title={`本月收入（${monthKey}）`} value={money(thisMonth.inc)} prefix="¥" valueStyle={{ color: '#389e0d' }} />
           </Card>
         </Col>
-        <Col span={5}>
+        <Col xs={12} lg={5}>
           <Card>
             <Statistic title={`本月支出（${monthKey}）`} value={money(thisMonth.exp)} prefix="¥" valueStyle={{ color: '#cf1322' }} />
           </Card>
         </Col>
-        <Col span={4}>
+        <Col xs={24} lg={4}>
           <Card hoverable onClick={() => nav('/traces?status=ABNORMAL')}>
             <Statistic title="异常资金链" value={abnormal.length} suffix="条" valueStyle={{ color: abnormal.length ? '#cf1322' : undefined }} />
           </Card>
         </Col>
       </Row>
 
-      <Row gutter={16}>
-        <Col span={15}>
+      <Row gutter={[16, 16]}>
+        <Col xs={24} lg={15}>
           <Card title="近 12 个月收支（管理口径，不含内部划转）" size="small">
             <ReactECharts
               style={{ height: 280 }}
@@ -149,7 +149,7 @@ export default function Dashboard() {
             />
           </Card>
         </Col>
-        <Col span={9}>
+        <Col xs={24} lg={9}>
           <Card
             title={
               <Space>
@@ -184,14 +184,15 @@ export default function Dashboard() {
         </Col>
       </Row>
 
-      <Row gutter={16}>
-        <Col span={15}>
+      <Row gutter={[16, 16]}>
+        <Col xs={24} lg={15}>
           <Card title="项目概况" size="small" extra={<Link to="/projects">全部项目</Link>}>
             <Table
               size="small"
               rowKey="id"
               pagination={false}
               dataSource={projectRows.slice(0, 6)}
+              scroll={{ x: 620 }}
               columns={[
                 { title: '项目', dataIndex: 'name', ellipsis: true, render: (v: string, p) => <Link to={`/projects/${p.id}`}>{v}</Link> },
                 { title: '主体', dataIndex: 'entityId', width: 90, render: (id: string) => <EntityTag id={id} /> },
@@ -210,7 +211,7 @@ export default function Dashboard() {
             />
           </Card>
         </Col>
-        <Col span={9}>
+        <Col xs={24} lg={9}>
           <Card title="最近流水" size="small" extra={<Link to="/flows">全部</Link>}>
             <List
               size="small"

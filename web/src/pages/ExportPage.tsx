@@ -4,6 +4,7 @@ import type { Dayjs } from 'dayjs';
 import { useEffect, useState } from 'react';
 import { PageTitle } from '@/components/PageTitle';
 import { AccountSelect } from '@/components/Pickers';
+import { useIsMobile } from '@/components/ui';
 import { useStore } from '@/data/store';
 import { useScopedProjects } from '@/data/hooks';
 import type { AuditEntry, ID } from '@ledger/shared/types';
@@ -17,6 +18,7 @@ export default function ExportPage() {
   const [range, setRange] = useState<[Dayjs | null, Dayjs | null] | null>(null);
   const [recent, setRecent] = useState<AuditEntry[]>([]);
   const [busy, setBusy] = useState<string>();
+  const mobile = useIsMobile();
   const entityId = scope === 'ALL' ? undefined : scope;
   const from = range?.[0]?.format('YYYY-MM-DD');
   const to = range?.[1]?.format('YYYY-MM-DD');
@@ -52,7 +54,7 @@ export default function ExportPage() {
       desc: '沿用现有日记账版式（序号 / 日期 / 对方 / 摘要 / 收入 / 支出 / 余额），期初、余额与合计由系统计算',
       action: (
         <Space.Compact>
-          <AccountSelect style={{ width: 220 }} placeholder="选择账户" value={acc} onChange={setAcc} kinds={['CORPORATE', 'INTERNAL_PERSONAL', 'CASH']} showBalance={false} />
+          <AccountSelect style={{ width: mobile ? 180 : 220 }} placeholder="选择账户" value={acc} onChange={setAcc} kinds={['CORPORATE', 'INTERNAL_PERSONAL', 'CASH']} showBalance={false} />
           {btn('journal', `/exports/journal${api.qs({ accountId: acc, from, to })}`, !acc)}
         </Space.Compact>
       ),
@@ -65,7 +67,7 @@ export default function ExportPage() {
       desc: '选择项目，导出结算单或其全部流水',
       action: (
         <Space.Compact>
-          <Select style={{ width: 240 }} placeholder="选择项目" value={proj} onChange={setProj} options={projects.map((p) => ({ value: p.id, label: p.name }))} showSearch optionFilterProp="label" />
+          <Select style={{ width: mobile ? 150 : 240 }} placeholder="选择项目" value={proj} onChange={setProj} options={projects.map((p) => ({ value: p.id, label: p.name }))} showSearch optionFilterProp="label" />
           <Button loading={busy === 'settlement'} disabled={!proj} onClick={() => run('settlement', `/exports/settlement?projectId=${proj}`)}>结算单</Button>
           <Button loading={busy === 'pflows'} disabled={!proj} onClick={() => run('pflows', `/exports/flows?projectId=${proj}`)}>流水</Button>
         </Space.Compact>
@@ -79,21 +81,22 @@ export default function ExportPage() {
 
   return (
     <>
-      <PageTitle title="导出中心" sub="所有文件由后端生成，带数据范围、导出人、导出时间水印，并记录审计日志" extra={<Space><Typography.Text type="secondary">日期范围</Typography.Text><DatePicker.RangePicker value={range} onChange={setRange} /></Space>} />
-      <Row gutter={16}>
-        <Col span={15}>
+      <PageTitle title="导出中心" sub="所有文件由后端生成，带数据范围、导出人、导出时间水印，并记录审计日志" extra={<Space wrap><Typography.Text type="secondary">日期范围</Typography.Text><DatePicker.RangePicker value={range} onChange={setRange} /></Space>} />
+      <Row gutter={[16, 16]}>
+        <Col xs={24} lg={15}>
           <Card>
             <List dataSource={items} renderItem={(i) => <List.Item actions={[i.action]}><List.Item.Meta title={i.title} description={i.desc} /></List.Item>} />
             <Alert type="info" showIcon style={{ marginTop: 12 }} message="数据范围取顶部的主体切换器；日期范围对流水明细和日记账生效。各列表页的“导出当前列表”按页面筛选结果导出。" />
           </Card>
         </Col>
-        <Col span={9}>
+        <Col xs={24} lg={9}>
           <Card title="最近导出" size="small">
             <Table
               size="small"
               rowKey="id"
               pagination={false}
               dataSource={recent}
+              scroll={{ x: 460 }}
               locale={{ emptyText: '暂无' }}
               columns={[
                 { title: '内容', dataIndex: 'summary', ellipsis: true },

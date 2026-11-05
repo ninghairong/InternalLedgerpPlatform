@@ -70,7 +70,7 @@ export default function Flows() {
         }
       />
       <Card>
-        <Space wrap style={{ marginBottom: 12 }}>
+        <Space wrap className="filter-bar" style={{ marginBottom: 12 }}>
           <Select
             allowClear
             placeholder="状态"

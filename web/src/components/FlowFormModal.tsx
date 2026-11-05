@@ -152,7 +152,7 @@ export function FlowFormModal({ open, onClose, copyFrom }: { open: boolean; onCl
       width={980}
       destroyOnHidden
       footer={
-        <Space>
+        <Space wrap style={{ justifyContent: 'flex-end' }}>
           <Button onClick={onClose}>取消</Button>
           <Button onClick={() => submit(true)} loading={busy}>保存并继续录入</Button>
           <Button type="primary" onClick={() => submit(false)} loading={busy}>保存</Button>
@@ -161,49 +161,49 @@ export function FlowFormModal({ open, onClose, copyFrom }: { open: boolean; onCl
     >
       <Form form={form} layout="vertical" initialValues={{ date: dayjs(today()), method: 'BANK_TRANSFER', splits: [{}] }} requiredMark="optional">
         <Row gutter={16}>
-          <Col span={6}>
+          <Col xs={12} md={6}>
             <Form.Item name="date" label="日期" rules={[{ required: true }]}>
               <DatePicker style={{ width: '100%' }} />
             </Form.Item>
           </Col>
-          <Col span={9}>
+          <Col xs={24} md={9}>
             <Form.Item name="fromAccountId" label="转出账户" rules={[{ required: true, message: '请选择转出账户' }]}>
               <AccountSelect />
             </Form.Item>
           </Col>
-          <Col span={9}>
+          <Col xs={24} md={9}>
             <Form.Item name="toAccountId" label="转入账户" rules={[{ required: true, message: '请选择转入账户' }]}>
               <AccountSelect />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} md={8}>
             <Form.Item name="amount" label="金额（元）" rules={[{ required: true, message: '请输入金额' }]} extra={amount ? <Typography.Text type="secondary">{cnUpper(amount)}</Typography.Text> : null}>
               <InputNumber style={{ width: '100%' }} min={0.01} precision={2} controls={false} formatter={(v) => `${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} parser={(v) => Number((v ?? '').replace(/,/g, '')) as unknown as 0.01} />
             </Form.Item>
           </Col>
-          <Col span={6}>
+          <Col xs={12} md={6}>
             <Form.Item name="method" label="流转方式" rules={[{ required: true }]}>
               <Select options={Object.entries(FLOW_METHOD).map(([value, label]) => ({ value, label }))} />
             </Form.Item>
           </Col>
-          <Col span={5}>
+          <Col xs={12} md={5}>
             <Form.Item name="handler" label="经办人">
               <Input placeholder="姓名" />
             </Form.Item>
           </Col>
-          <Col span={5}>
+          <Col xs={isIc ? 24 : 0} md={5}>
             {isIc && (
               <Form.Item name="icNature" label="集团内往来性质" rules={[{ required: true, message: '两家主体之间的流水需选择性质' }]}>
                 <Select options={Object.entries(IC_NATURE).map(([value, label]) => ({ value, label }))} />
               </Form.Item>
             )}
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <Form.Item name="bookSummary" label="账面摘要" tooltip="银行回单上的用途">
               <Input placeholder="如：支付王燕雪工资" />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <Form.Item label="实际用途" tooltip="与账面摘要不同时填写，账目类型按实际用途选择">
               <Space.Compact style={{ width: '100%' }}>
                 <Form.Item name="actualPurpose" noStyle>
@@ -232,36 +232,36 @@ export function FlowFormModal({ open, onClose, copyFrom }: { open: boolean; onCl
                 const proj = projMap.get(splits[idx]?.projectId ?? '');
                 return (
                   <Row gutter={8} key={field.key} align="top">
-                    <Col span={singleSplit ? 12 : 9}>
+                    <Col xs={24} md={singleSplit ? 12 : 9}>
                       <Form.Item name={[field.name, 'projectId']} rules={[{ required: true, message: '请选择项目' }]} extra={proj ? `归属主体：${useStore.getState().entities.find((e) => e.id === proj.entityId)?.shortName}` : undefined}>
                         <ProjectSelect />
                       </Form.Item>
                     </Col>
-                    <Col span={singleSplit ? 12 : 8}>
+                    <Col xs={24} md={singleSplit ? 12 : 8}>
                       <Form.Item name={[field.name, 'categoryId']} rules={[{ required: true, message: '请选择账目类型' }]}>
                         <CategorySelect style={{ width: '100%' }} />
                       </Form.Item>
                     </Col>
                     {!singleSplit && (
-                      <Col span={5}>
+                      <Col xs={20} md={5}>
                         <Form.Item name={[field.name, 'amount']} rules={[{ required: true, message: '金额' }]}>
                           <InputNumber style={{ width: '100%' }} min={0.01} precision={2} placeholder="金额" />
                         </Form.Item>
                       </Col>
                     )}
                     {!singleSplit && (
-                      <Col span={2}>
+                      <Col xs={4} md={2}>
                         <Button icon={<DeleteOutlined />} type="text" danger onClick={() => remove(field.name)} />
                       </Col>
                     )}
                     {cat?.requiresTax && (
                       <>
-                        <Col span={6}>
+                        <Col xs={12} md={6}>
                           <Form.Item name={[field.name, 'tax']} rules={[{ required: true, message: '缴税流水须注明税种' }]}>
                             <Select placeholder="税种" options={Object.entries(TAX_KIND).map(([value, label]) => ({ value, label }))} />
                           </Form.Item>
                         </Col>
-                        <Col span={6}>
+                        <Col xs={12} md={6}>
                           <Form.Item name={[field.name, 'taxPeriod']} rules={[{ required: true, message: '所属期' }]}>
                             <Input placeholder="所属期，如 2026-10 或 2026-Q3" />
                           </Form.Item>
@@ -271,7 +271,7 @@ export function FlowFormModal({ open, onClose, copyFrom }: { open: boolean; onCl
                   </Row>
                 );
               })}
-              <Space>
+              <Space wrap>
                 <Button size="small" icon={<PlusOutlined />} onClick={() => add({})}>
                   拆分到多个项目 / 类型
                 </Button>
@@ -304,7 +304,7 @@ export function FlowFormModal({ open, onClose, copyFrom }: { open: boolean; onCl
                 }
               />
             ) : (
-              <Space style={{ marginBottom: 8 }}>
+              <Space align="start" style={{ marginBottom: 8, display: 'flex' }}>
                 <Switch size="small" checked={optionalTrace} onChange={setOptionalTrace} />
                 <Typography.Text type="secondary">关联资金来源（可选）：用于把外部账户转回的钱接到原资金链上，例如李老板收到现金后转回公户</Typography.Text>
               </Space>
@@ -314,7 +314,7 @@ export function FlowFormModal({ open, onClose, copyFrom }: { open: boolean; onCl
                 size="small"
                 rowKey="flowId"
                 pagination={false}
-                scroll={{ y: 220 }}
+                scroll={{ x: 860, y: 220 }}
                 dataSource={openLots}
                 locale={{ emptyText: '该账户没有可用的入款' }}
                 title={() => (
@@ -356,12 +356,12 @@ export function FlowFormModal({ open, onClose, copyFrom }: { open: boolean; onCl
         )}
 
         <Row gutter={16} style={{ marginTop: 16 }}>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <Form.Item name="invoiceNos" label="关联发票号">
               <Select mode="tags" placeholder="输入发票号后回车" tokenSeparators={[',', ';', ' ']} />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <Form.Item name="remark" label="备注">
               <Input />
             </Form.Item>
@@ -374,7 +374,7 @@ export function FlowFormModal({ open, onClose, copyFrom }: { open: boolean; onCl
           beforeUpload={() => false}
           onChange={({ fileList }) => setFiles(fileList)}
         >
-          <Button icon={<PaperClipOutlined />}>添加凭证（转账截图、收据、发票，图片或 PDF）</Button>
+          <Button icon={<PaperClipOutlined />} style={{ whiteSpace: 'normal', height: 'auto', textAlign: 'left' }}>添加凭证（转账截图、收据、发票，图片或 PDF）</Button>
         </Upload>
       </Form>
     </Modal>

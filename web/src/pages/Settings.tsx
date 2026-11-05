@@ -117,11 +117,11 @@ function Categories() {
       children: categories.filter((c) => c.parentId === p.id).map((c) => ({ key: c.id, title: <>{c.name} {c.requiresTax && <Tag color="orange">须填税种</Tag>}<Typography.Text type="secondary" style={{ fontSize: 12 }}> {c.id}</Typography.Text></> })),
     }));
   return (
-    <Row gutter={24}>
-      <Col span={12}>
+    <Row gutter={[24, 16]}>
+      <Col xs={24} lg={12}>
         <Tree treeData={tree} defaultExpandAll selectable={false} />
       </Col>
-      <Col span={12}>
+      <Col xs={24} lg={12}>
         <Typography.Paragraph><b>不计损益</b>的类型（内部划转、往来款）只用于资金链与往来余额，不计入项目成本或收入，避免同一笔钱在流转过程中被重复统计。</Typography.Paragraph>
         <Typography.Paragraph><b>须填税种</b>的类型（缴税、社保）必须注明税种与所属期，不能只记"国库"。</Typography.Paragraph>
         <Typography.Paragraph type="secondary">新增的子类型继承一级类型的性质；已使用的类型不能删除或改性质，以保证历史报表口径一致。</Typography.Paragraph>
@@ -168,6 +168,7 @@ function TaxRules() {
         rowKey="id"
         pagination={false}
         dataSource={rules}
+        scroll={{ x: 960 }}
         columns={[
           { title: '税种', dataIndex: 'tax', render: (t: string) => TAX_NAME[t] ?? t },
           { title: '名称', dataIndex: 'name' },
@@ -197,15 +198,15 @@ function TaxRules() {
       >
         <Form form={form} layout="vertical" preserve={false}>
           <Row gutter={12}>
-            <Col span={12}><Form.Item name="tax" label="税种" rules={[{ required: true }]}><Select options={Object.entries(TAX_NAME).map(([value, label]) => ({ value, label }))} /></Form.Item></Col>
-            <Col span={12}><Form.Item name="taxpayer" label="适用身份"><Select allowClear placeholder="全部" options={[{ value: 'GENERAL', label: '一般纳税人' }, { value: 'SMALL', label: '小规模' }]} /></Form.Item></Col>
-            <Col span={24}><Form.Item name="name" label="名称" rules={[{ required: true }]}><Input placeholder="如：增值税-小规模（3% 减按 1%）" /></Form.Item></Col>
-            <Col span={8}><Form.Item name="rate" label="税率（%）" rules={[{ required: true }]}><InputNumber style={{ width: '100%' }} min={0} max={99} /></Form.Item></Col>
-            <Col span={8}><Form.Item name="threshold" label="免征额（万元）"><InputNumber style={{ width: '100%' }} min={0} /></Form.Item></Col>
-            <Col span={8}><Form.Item name="thresholdPeriod" label="免征额周期"><Select allowClear options={[{ value: 'QUARTER', label: '季度' }, { value: 'MONTH', label: '月度' }]} /></Form.Item></Col>
-            <Col span={12}><Form.Item name="validFrom" label="生效日期" rules={[{ required: true }]}><DatePicker style={{ width: '100%' }} /></Form.Item></Col>
-            <Col span={12}><Form.Item name="validTo" label="失效日期"><DatePicker style={{ width: '100%' }} /></Form.Item></Col>
-            <Col span={24}><Form.Item name="policyRef" label="政策依据"><Input /></Form.Item></Col>
+            <Col xs={24} md={12}><Form.Item name="tax" label="税种" rules={[{ required: true }]}><Select options={Object.entries(TAX_NAME).map(([value, label]) => ({ value, label }))} /></Form.Item></Col>
+            <Col xs={24} md={12}><Form.Item name="taxpayer" label="适用身份"><Select allowClear placeholder="全部" options={[{ value: 'GENERAL', label: '一般纳税人' }, { value: 'SMALL', label: '小规模' }]} /></Form.Item></Col>
+            <Col xs={24} md={24}><Form.Item name="name" label="名称" rules={[{ required: true }]}><Input placeholder="如：增值税-小规模（3% 减按 1%）" /></Form.Item></Col>
+            <Col xs={24} md={8}><Form.Item name="rate" label="税率（%）" rules={[{ required: true }]}><InputNumber style={{ width: '100%' }} min={0} max={99} /></Form.Item></Col>
+            <Col xs={24} md={8}><Form.Item name="threshold" label="免征额（万元）"><InputNumber style={{ width: '100%' }} min={0} /></Form.Item></Col>
+            <Col xs={24} md={8}><Form.Item name="thresholdPeriod" label="免征额周期"><Select allowClear options={[{ value: 'QUARTER', label: '季度' }, { value: 'MONTH', label: '月度' }]} /></Form.Item></Col>
+            <Col xs={24} md={12}><Form.Item name="validFrom" label="生效日期" rules={[{ required: true }]}><DatePicker style={{ width: '100%' }} /></Form.Item></Col>
+            <Col xs={24} md={12}><Form.Item name="validTo" label="失效日期"><DatePicker style={{ width: '100%' }} /></Form.Item></Col>
+            <Col xs={24} md={24}><Form.Item name="policyRef" label="政策依据"><Input /></Form.Item></Col>
           </Row>
         </Form>
       </Modal>
@@ -221,7 +222,7 @@ function Audit() {
   }, [action]);
   return (
     <>
-      <Space style={{ marginBottom: 12 }}>
+      <Space wrap style={{ marginBottom: 12 }}>
         <Select
           allowClear
           placeholder="操作类型"

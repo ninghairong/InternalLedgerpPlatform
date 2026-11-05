@@ -158,8 +158,8 @@ export default function ChainWizard() {
           </Button>
         }
       />
-      <Row gutter={16}>
-        <Col span={13}>
+      <Row gutter={[16, 16]}>
+        <Col xs={24} lg={13}>
           {sim.results.map((r, i) => (
             <div key={r.step.key}>
               <Card
@@ -176,33 +176,33 @@ export default function ChainWizard() {
                 }
                 extra={steps.length > 1 && <Button type="text" danger size="small" icon={<DeleteOutlined />} onClick={() => setSteps((ss) => ss.filter((s) => s.key !== r.step.key))} />}
               >
-                <Row gutter={8}>
-                  <Col span={6}>
+                <Row gutter={[8, 8]}>
+                  <Col xs={24} md={6}>
                     <DatePicker style={{ width: '100%' }} value={r.step.date} onChange={(d) => d && update(r.step.key, { date: d })} allowClear={false} />
                   </Col>
-                  <Col span={9}>
+                  <Col xs={24} md={9}>
                     <AccountSelect style={{ width: '100%' }} placeholder="从" value={r.step.from} onChange={(v) => update(r.step.key, { from: v })} />
                   </Col>
-                  <Col span={9}>
+                  <Col xs={24} md={9}>
                     <AccountSelect style={{ width: '100%' }} placeholder="到" value={r.step.to} onChange={(v) => update(r.step.key, { to: v })} />
                   </Col>
                 </Row>
-                <Row gutter={8} style={{ marginTop: 8 }}>
-                  <Col span={6}>
+                <Row gutter={[8, 8]} style={{ marginTop: 8 }}>
+                  <Col xs={12} md={6}>
                     <InputNumber style={{ width: '100%' }} placeholder="金额（元）" min={0.01} precision={2} value={r.step.amount} onChange={(v) => update(r.step.key, { amount: v ?? undefined })} />
                   </Col>
-                  <Col span={5}>
+                  <Col xs={12} md={5}>
                     <Select style={{ width: '100%' }} value={r.step.method} onChange={(v) => update(r.step.key, { method: v })} options={Object.entries(FLOW_METHOD).map(([value, label]) => ({ value, label }))} />
                   </Col>
-                  <Col span={13}>
+                  <Col xs={24} md={13}>
                     <ProjectSelect style={{ width: '100%' }} value={r.step.projectId} onChange={(v) => update(r.step.key, { projectId: v })} />
                   </Col>
                 </Row>
-                <Row gutter={8} style={{ marginTop: 8 }}>
-                  <Col span={11}>
+                <Row gutter={[8, 8]} style={{ marginTop: 8 }}>
+                  <Col xs={24} md={11}>
                     <CategorySelect style={{ width: '100%' }} value={r.step.categoryId} onChange={(v) => update(r.step.key, { categoryId: v })} />
                   </Col>
-                  <Col span={13}>
+                  <Col xs={24} md={13}>
                     <Input placeholder="摘要 / 实际用途" value={r.step.summary} onChange={(e) => update(r.step.key, { summary: e.target.value })} />
                   </Col>
                 </Row>
@@ -230,7 +230,7 @@ export default function ChainWizard() {
             添加下一步（从上一步的转入账户继续）
           </Button>
         </Col>
-        <Col span={11}>
+        <Col xs={24} lg={11}>
           <Card size="small" title="链路预览" style={{ position: 'sticky', top: 16 }}>
             {sim.traces.length ? (
               sim.traces.map((t) => <TraceGraph key={t.id} trace={t} height={320} />)

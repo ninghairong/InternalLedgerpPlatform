@@ -85,6 +85,7 @@ export default function Tax() {
                   size="small"
                   rowKey="id"
                   dataSource={scopedInvoices}
+                  scroll={{ x: 1200 }}
                   pagination={{ pageSize: 20 }}
                   columns={[
                     { title: '方向', dataIndex: 'direction', render: (d: string) => (d === 'OUTPUT' ? <Tag color="green">销项</Tag> : <Tag color="blue">进项</Tag>) },
@@ -131,10 +132,10 @@ export default function Tax() {
               key: 'match',
               label: `发票与流水核对（${unmatchedInvoices.length + unknownNos.length}）`,
               children: (
-                <Row gutter={16}>
-                  <Col span={12}>
+                <Row gutter={[16, 16]}>
+                  <Col xs={24} lg={12}>
                     <Typography.Title level={5}>有发票、没有关联流水</Typography.Title>
-                    <Table size="small" rowKey="id" pagination={false} dataSource={unmatchedInvoices} locale={{ emptyText: '全部已关联' }}
+                    <Table size="small" rowKey="id" pagination={false} dataSource={unmatchedInvoices} scroll={{ x: 480 }} locale={{ emptyText: '全部已关联' }}
                       columns={[
                         { title: '发票号', dataIndex: 'invoiceNo' },
                         { title: '方向', dataIndex: 'direction', render: (d: string) => (d === 'OUTPUT' ? '销项' : '进项') },
@@ -142,7 +143,7 @@ export default function Tax() {
                         { title: '价税合计', key: 't', align: 'right', render: (_: unknown, i: Invoice) => money(i.amountExclTax + i.taxAmount) },
                       ]} />
                   </Col>
-                  <Col span={12}>
+                  <Col xs={24} lg={12}>
                     <Typography.Title level={5}>流水填写的发票号，台账中没有</Typography.Title>
                     <Table size="small" rowKey="0" pagination={false} dataSource={unknownNos} locale={{ emptyText: '没有' }}
                       columns={[
@@ -224,18 +225,18 @@ function InvoiceModal({ invoice, onClose }: { invoice?: Invoice | 'new'; onClose
         }}
       >
         <Row gutter={12}>
-          <Col span={6}><Form.Item name="direction" label="方向" rules={[{ required: true }]}><Select options={[{ value: 'OUTPUT', label: '销项（我方开出）' }, { value: 'INPUT', label: '进项（收到）' }]} /></Form.Item></Col>
-          <Col span={6}><Form.Item name="type" label="票种" rules={[{ required: true }]}><Select options={[{ value: 'VAT_SPECIAL', label: '增值税专票' }, { value: 'VAT_NORMAL', label: '增值税普票' }]} /></Form.Item></Col>
-          <Col span={6}><Form.Item name="invoiceNo" label="发票号" rules={[{ required: true }]}><Input /></Form.Item></Col>
-          <Col span={6}><Form.Item name="issueDate" label="开票日期" rules={[{ required: true }]}><DatePicker style={{ width: '100%' }} /></Form.Item></Col>
-          <Col span={12}><Form.Item name="entityId" label="我方主体" rules={[{ required: true }]}><Select options={entities.map((e) => ({ value: e.id, label: `${e.shortName} · ${e.taxpayerType === 'GENERAL' ? '一般纳税人' : '小规模'}` }))} /></Form.Item></Col>
-          <Col span={12}><Form.Item name="projectId" label="项目"><ProjectSelect allowClear entityId={entityId} /></Form.Item></Col>
-          <Col span={12}><Form.Item name="counterparty" label="对方单位" rules={[{ required: true }]}><Input /></Form.Item></Col>
-          <Col span={12}><Form.Item name="goods" label="货物或服务名称" rules={[{ required: true }]}><Input placeholder="如：建筑服务*围栏工程" /></Form.Item></Col>
-          <Col span={8}><Form.Item name="amountExclTax" label="不含税金额（元）" rules={[{ required: true }]}><InputNumber style={{ width: '100%' }} min={0} precision={2} /></Form.Item></Col>
-          <Col span={8}><Form.Item name="taxRate" label="税率 / 征收率（%）" rules={[{ required: true }]}><Select options={[13, 9, 6, 5, 3, 1, 0].map((x) => ({ value: x, label: `${x}%` }))} /></Form.Item></Col>
-          <Col span={8}><Form.Item name="taxAmount" label="税额（元）" rules={[{ required: true }]} extra={excl != null && rate != null ? `价税合计 ${money(toCents(excl) + toCents(form.getFieldValue('taxAmount') ?? 0))}` : undefined}><InputNumber style={{ width: '100%' }} min={0} precision={2} /></Form.Item></Col>
-          <Col span={24}><Form.Item name="remark" label="备注"><Input /></Form.Item></Col>
+          <Col xs={24} md={6}><Form.Item name="direction" label="方向" rules={[{ required: true }]}><Select options={[{ value: 'OUTPUT', label: '销项（我方开出）' }, { value: 'INPUT', label: '进项（收到）' }]} /></Form.Item></Col>
+          <Col xs={24} md={6}><Form.Item name="type" label="票种" rules={[{ required: true }]}><Select options={[{ value: 'VAT_SPECIAL', label: '增值税专票' }, { value: 'VAT_NORMAL', label: '增值税普票' }]} /></Form.Item></Col>
+          <Col xs={24} md={6}><Form.Item name="invoiceNo" label="发票号" rules={[{ required: true }]}><Input /></Form.Item></Col>
+          <Col xs={24} md={6}><Form.Item name="issueDate" label="开票日期" rules={[{ required: true }]}><DatePicker style={{ width: '100%' }} /></Form.Item></Col>
+          <Col xs={24} md={12}><Form.Item name="entityId" label="我方主体" rules={[{ required: true }]}><Select options={entities.map((e) => ({ value: e.id, label: `${e.shortName} · ${e.taxpayerType === 'GENERAL' ? '一般纳税人' : '小规模'}` }))} /></Form.Item></Col>
+          <Col xs={24} md={12}><Form.Item name="projectId" label="项目"><ProjectSelect allowClear entityId={entityId} /></Form.Item></Col>
+          <Col xs={24} md={12}><Form.Item name="counterparty" label="对方单位" rules={[{ required: true }]}><Input /></Form.Item></Col>
+          <Col xs={24} md={12}><Form.Item name="goods" label="货物或服务名称" rules={[{ required: true }]}><Input placeholder="如：建筑服务*围栏工程" /></Form.Item></Col>
+          <Col xs={24} md={8}><Form.Item name="amountExclTax" label="不含税金额（元）" rules={[{ required: true }]}><InputNumber style={{ width: '100%' }} min={0} precision={2} /></Form.Item></Col>
+          <Col xs={24} md={8}><Form.Item name="taxRate" label="税率 / 征收率（%）" rules={[{ required: true }]}><Select options={[13, 9, 6, 5, 3, 1, 0].map((x) => ({ value: x, label: `${x}%` }))} /></Form.Item></Col>
+          <Col xs={24} md={8}><Form.Item name="taxAmount" label="税额（元）" rules={[{ required: true }]} extra={excl != null && rate != null ? `价税合计 ${money(toCents(excl) + toCents(form.getFieldValue('taxAmount') ?? 0))}` : undefined}><InputNumber style={{ width: '100%' }} min={0} precision={2} /></Form.Item></Col>
+          <Col xs={24} md={24}><Form.Item name="remark" label="备注"><Input /></Form.Item></Col>
         </Row>
       </Form>
     </Modal>

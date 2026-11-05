@@ -41,7 +41,7 @@ export default function Projects() {
         }
       />
       <Card>
-        <Space style={{ marginBottom: 12 }}>
+        <Space wrap className="filter-bar" style={{ marginBottom: 12 }}>
           <Segmented
             value={status}
             onChange={(v) => setStatus(v as ProjectStatus | 'ALL')}
@@ -132,42 +132,42 @@ export function ProjectFormModal({ open, onClose, project }: { open: boolean; on
     >
       <Form form={form} layout="vertical" initialValues={initial} preserve={false}>
         <Row gutter={12}>
-          <Col span={8}>
+          <Col xs={24} md={8}>
             <Form.Item name="code" label="项目编号" rules={[{ required: true }]}>
               <Input placeholder="P-QY-004" disabled={!!project} />
             </Form.Item>
           </Col>
-          <Col span={16}>
+          <Col xs={24} md={16}>
             <Form.Item name="name" label="项目名称" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <Form.Item name="entityId" label="承接主体" rules={[{ required: true }]} extra="决定项目收入、成本与税费归属">
               <Select disabled={!!project} options={entities.map((e) => ({ value: e.id, label: `${e.name}（${e.taxpayerType === 'GENERAL' ? '一般纳税人' : '小规模'}）` }))} />
             </Form.Item>
           </Col>
-          <Col span={6}>
+          <Col xs={24} md={6}>
             <Form.Item name="manager" label="负责人" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
-          <Col span={6}>
+          <Col xs={24} md={6}>
             <Form.Item name="vatMethod" label="计税方式">
               <Select options={[{ value: 'GENERAL', label: '一般计税' }, { value: 'SIMPLE', label: '简易计税' }]} />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <Form.Item name="customer" label="客户">
               <Input />
             </Form.Item>
           </Col>
-          <Col span={6}>
+          <Col xs={24} md={6}>
             <Form.Item name="region" label="项目所在地" tooltip="与主体所在地不同时提示跨地区预缴">
               <Input />
             </Form.Item>
           </Col>
-          <Col span={6}>
+          <Col xs={24} md={6}>
             <Form.Item name="contract" label="合同额（元）">
               <InputNumber style={{ width: '100%' }} min={0} precision={2} />
             </Form.Item>
@@ -178,18 +178,18 @@ export function ProjectFormModal({ open, onClose, project }: { open: boolean; on
             ['bReimb', '报销预算'],
             ['bSub', '分包预算'],
           ].map(([k, l]) => (
-            <Col span={6} key={k}>
+            <Col xs={24} md={6} key={k}>
               <Form.Item name={k} label={`${l}（元）`}>
                 <InputNumber style={{ width: '100%' }} min={0} precision={2} />
               </Form.Item>
             </Col>
           ))}
-          <Col span={6}>
+          <Col xs={24} md={6}>
             <Form.Item name="startDate" label="开始日期">
               <DatePicker style={{ width: '100%' }} />
             </Form.Item>
           </Col>
-          <Col span={6}>
+          <Col xs={24} md={6}>
             <Form.Item name="status" label="状态" extra={project?.status === 'CLOSED' ? '已结项项目由管理员在详情页重新开启' : undefined}>
               <Select disabled={project?.status === 'CLOSED'} options={[{ value: 'PREPARING', label: '筹备' }, { value: 'ACTIVE', label: '进行中' }, ...(project?.status === 'CLOSED' ? [{ value: 'CLOSED', label: '已结项' }] : [])]} />
             </Form.Item>

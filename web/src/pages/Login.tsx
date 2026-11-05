@@ -9,8 +9,8 @@ export default function Login() {
   const nav = useNavigate();
   const [busy, setBusy] = useState(false);
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f6f8' }}>
-      <Card style={{ width: 380 }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f6f8', padding: 16, boxSizing: 'border-box' }}>
+      <Card style={{ width: '100%', maxWidth: 380 }}>
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <AccountBookOutlined style={{ fontSize: 36, color: '#1677ff' }} />
           <Typography.Title level={4} style={{ marginTop: 8 }}>

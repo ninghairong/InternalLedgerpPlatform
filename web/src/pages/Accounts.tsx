@@ -1,4 +1,4 @@
-import { Alert, Button, Card, DatePicker, Drawer, Form, Input, InputNumber, Modal, Popconfirm, Select, Space, Table, Tabs, Tag, Typography, message } from 'antd';
+import { Alert, Button, Card, Col, DatePicker, Drawer, Form, Input, InputNumber, Modal, Popconfirm, Row, Select, Space, Table, Tabs, Tag, Typography, message } from 'antd';
 import dayjs from 'dayjs';
 import { DownloadOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { useMemo, useState } from 'react';
@@ -136,14 +136,14 @@ function AccountDrawer({ id, onClose }: { id?: ID; onClose: () => void }) {
       onClose={onClose}
       width={1080}
       title={
-        <Space>
+        <Space wrap size={[8, 4]}>
           {account.name}
           <Tag color={ACCOUNT_KIND[account.kind].color}>{ACCOUNT_KIND[account.kind].label}</Tag>
           <Typography.Text type="secondary">余额 ¥{money(bal.get(account.id) ?? 0)}</Typography.Text>
         </Space>
       }
       extra={
-        <Space>
+        <Space wrap>
           {canWrite && account.kind !== 'VIRTUAL' && (
             <Button icon={<EditOutlined />} onClick={() => setEditing(true)}>
               编辑
@@ -233,14 +233,18 @@ function AccountFormModal({ open, kind, account, onClose }: { open: boolean; kin
         <Form.Item name="kind" label="账户类型" rules={[{ required: true }]}>
           <Select disabled={!!account} options={(['CORPORATE', 'INTERNAL_PERSONAL', 'CASH', 'EXTERNAL'] as AccountKind[]).map((x) => ({ value: x, label: ACCOUNT_KIND[x].label }))} />
         </Form.Item>
-        <Space.Compact block>
-          <Form.Item name="code" label="编号" rules={[{ required: true }]} style={{ width: '35%' }}>
-            <Input disabled={!!account} />
-          </Form.Item>
-          <Form.Item name="name" label="名称" rules={[{ required: true }]} style={{ width: '65%' }}>
-            <Input placeholder={k === 'INTERNAL_PERSONAL' ? '如：王xx-建行卡' : k === 'CASH' ? '如：王xx-现金' : ''} />
-          </Form.Item>
-        </Space.Compact>
+        <Row gutter={12}>
+          <Col xs={24} sm={8}>
+            <Form.Item name="code" label="编号" rules={[{ required: true }]}>
+              <Input disabled={!!account} />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={16}>
+            <Form.Item name="name" label="名称" rules={[{ required: true }]}>
+              <Input placeholder={k === 'INTERNAL_PERSONAL' ? '如：王xx-建行卡' : k === 'CASH' ? '如：王xx-现金' : ''} />
+            </Form.Item>
+          </Col>
+        </Row>
         {k === 'CORPORATE' && (
           <Form.Item name="entityId" label="所属主体" rules={[{ required: true }]}>
             <Select disabled={!!account} options={entities.map((e) => ({ value: e.id, label: e.name }))} />
@@ -252,30 +256,40 @@ function AccountFormModal({ open, kind, account, onClose }: { open: boolean; kin
           </Form.Item>
         )}
         {k !== 'CASH' && (
-          <Space.Compact block>
-            <Form.Item name="bank" label="开户行" style={{ width: '60%' }}>
-              <Input />
-            </Form.Item>
-            <Form.Item name="last4" label="账号尾号" style={{ width: '40%' }} rules={[{ pattern: /^\d{4}$/, message: '4 位数字' }]} extra="只记录尾号，不保存完整账号">
-              <Input maxLength={4} />
-            </Form.Item>
-          </Space.Compact>
+          <Row gutter={12}>
+            <Col xs={24} sm={14}>
+              <Form.Item name="bank" label="开户行">
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={10}>
+              <Form.Item name="last4" label="账号尾号" rules={[{ pattern: /^\d{4}$/, message: '4 位数字' }]} extra="只记录尾号，不保存完整账号">
+                <Input maxLength={4} />
+              </Form.Item>
+            </Col>
+          </Row>
         )}
         <Form.Item name="remark" label="备注">
           <Input />
         </Form.Item>
         {!account && (k === 'CORPORATE' || k === 'INTERNAL_PERSONAL' || k === 'CASH') && (
-          <Space.Compact block>
-            <Form.Item name="opening" label="期初余额（元）" style={{ width: '35%' }} extra="生成一笔期初流水，作为之后出款的资金来源">
-              <InputNumber style={{ width: '100%' }} min={0} precision={2} />
-            </Form.Item>
-            <Form.Item name="openingDate" label="期初日期" style={{ width: '25%' }}>
-              <DatePicker style={{ width: '100%' }} />
-            </Form.Item>
-            <Form.Item name="openingProject" label="期初项目" style={{ width: '40%' }} rules={[{ required: k !== 'CORPORATE' && !!form.getFieldValue('opening'), message: '个人卡/现金的期初须指定项目' }]} extra={k === 'CORPORATE' ? '不填则记入所属主体的公司公共项目' : undefined}>
-              <ProjectSelect allowClear entityId={k === 'CORPORATE' ? entityId : undefined} />
-            </Form.Item>
-          </Space.Compact>
+          <Row gutter={12}>
+            <Col xs={24} sm={8}>
+              <Form.Item name="opening" label="期初余额（元）" extra="生成一笔期初流水，作为之后出款的资金来源">
+                <InputNumber style={{ width: '100%' }} min={0} precision={2} />
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={6}>
+              <Form.Item name="openingDate" label="期初日期">
+                <DatePicker style={{ width: '100%' }} />
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={10}>
+              <Form.Item name="openingProject" label="期初项目" rules={[{ required: k !== 'CORPORATE' && !!form.getFieldValue('opening'), message: '个人卡/现金的期初须指定项目' }]} extra={k === 'CORPORATE' ? '不填则记入所属主体的公司公共项目' : undefined}>
+                <ProjectSelect allowClear entityId={k === 'CORPORATE' ? entityId : undefined} />
+              </Form.Item>
+            </Col>
+          </Row>
         )}
       </Form>
     </Modal>

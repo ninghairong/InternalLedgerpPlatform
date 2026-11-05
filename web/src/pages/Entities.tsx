@@ -251,45 +251,45 @@ function EntityFormModal({ entity, onClose }: { entity?: Entity | 'new'; onClose
     >
       <Form form={form} layout="vertical" preserve={false} initialValues={cur ?? { kind: 'INDEPENDENT', taxpayerType: 'GENERAL', urbanRate: 0.05, halving: false, validFrom: dayjs(today()).startOf('year') }}>
         <Row gutter={12}>
-          <Col span={6}>
+          <Col xs={24} md={6}>
             <Form.Item name="code" label="编号" rules={[{ required: true }]}>
               <Input placeholder="E30" disabled={!isNew} />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <Form.Item name="name" label="全称" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
-          <Col span={6}>
+          <Col xs={24} md={6}>
             <Form.Item name="shortName" label="简称" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} md={8}>
             <Form.Item name="kind" label="类型">
               <Select options={[{ value: 'INDEPENDENT', label: '独立公司' }, { value: 'HEAD', label: '总公司' }, { value: 'BRANCH', label: '分公司' }]} />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} md={8}>
             {kind === 'BRANCH' && (
               <Form.Item name="parentId" label="上级公司" rules={[{ required: true }]}>
                 <Select options={entities.filter((e) => e.kind !== 'BRANCH' && e.id !== cur?.id).map((e) => ({ value: e.id, label: e.shortName }))} />
               </Form.Item>
             )}
           </Col>
-          <Col span={8}>
+          <Col xs={24} md={8}>
             <Form.Item name="region" label="所在地" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <Form.Item name="uscc" label="统一社会信用代码">
               <Input />
             </Form.Item>
           </Col>
           {!isNew && (
-            <Col span={12}>
+            <Col xs={24} md={12}>
               <Form.Item name="status" label="状态">
                 <Select options={[{ value: 'ACTIVE', label: '正常' }, { value: 'DISABLED', label: '停用' }]} />
               </Form.Item>
@@ -305,22 +305,22 @@ function EntityFormModal({ entity, onClose }: { entity?: Entity | 'new'; onClose
 function ProfileFields() {
   return (
     <>
-      <Col span={8}>
+      <Col xs={24} md={8}>
         <Form.Item name="taxpayerType" label="纳税人身份" rules={[{ required: true }]}>
           <Select options={[{ value: 'GENERAL', label: '一般纳税人' }, { value: 'SMALL', label: '小规模纳税人' }]} />
         </Form.Item>
       </Col>
-      <Col span={8}>
+      <Col xs={24} md={8}>
         <Form.Item name="validFrom" label="生效日期" rules={[{ required: true }]}>
           <DatePicker style={{ width: '100%' }} />
         </Form.Item>
       </Col>
-      <Col span={4}>
+      <Col xs={24} md={4}>
         <Form.Item name="urbanRate" label="城建税率">
           <Select options={[{ value: 0.07, label: '7%' }, { value: 0.05, label: '5%' }, { value: 0.01, label: '1%' }]} />
         </Form.Item>
       </Col>
-      <Col span={4}>
+      <Col xs={24} md={4}>
         <Form.Item name="halving" label="六税两费减半" valuePropName="checked">
           <Checkbox />
         </Form.Item>

@@ -38,11 +38,11 @@ export default function Traces() {
           </Button>
         }
       />
-      <Row gutter={16} style={{ marginBottom: 16 }}>
-        <Col span={6}><Card size="small"><Statistic title="资金链总数" value={traces.length} /></Card></Col>
-        <Col span={6}><Card size="small"><Statistic title="留存在对公账户（未使用）" value={money(sum('retained'))} prefix="¥" /></Card></Col>
-        <Col span={6}><Card size="small"><Statistic title="滞留在个人/现金账户" value={money(sum('held'))} prefix="¥" valueStyle={{ color: '#722ed1' }} /></Card></Col>
-        <Col span={6}><Card size="small"><Statistic title="外部账户待说明差额" value={money(sum('external'))} prefix="¥" valueStyle={{ color: '#d48806' }} /></Card></Col>
+      <Row gutter={[12, 12]} style={{ marginBottom: 16 }}>
+        <Col xs={12} lg={6}><Card size="small"><Statistic title="资金链总数" value={traces.length} /></Card></Col>
+        <Col xs={12} lg={6}><Card size="small"><Statistic title="留存在对公账户（未使用）" value={money(sum('retained'))} prefix="¥" /></Card></Col>
+        <Col xs={12} lg={6}><Card size="small"><Statistic title="滞留在个人/现金账户" value={money(sum('held'))} prefix="¥" valueStyle={{ color: '#722ed1' }} /></Card></Col>
+        <Col xs={12} lg={6}><Card size="small"><Statistic title="外部账户待说明差额" value={money(sum('external'))} prefix="¥" valueStyle={{ color: '#d48806' }} /></Card></Col>
       </Row>
       <Card>
         <Space style={{ marginBottom: 12 }}>

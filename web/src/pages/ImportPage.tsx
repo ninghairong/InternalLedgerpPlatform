@@ -150,8 +150,8 @@ export default function ImportPage() {
         <Steps current={step} items={[{ title: '选择模板并上传' }, { title: '校验预览' }, { title: '完成' }]} style={{ maxWidth: 720, marginBottom: 24 }} />
 
         {step === 0 && (
-          <Row gutter={16}>
-            <Col span={11}>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} lg={11}>
               <Typography.Title level={5}>1. 下载模板（下拉选项来自系统当前数据）</Typography.Title>
               <Space direction="vertical" style={{ width: '100%' }}>
                 {(Object.keys(TEMPLATE_NAMES) as TemplateCode[]).map((code) => (
@@ -177,7 +177,7 @@ export default function ImportPage() {
                 ))}
               </Space>
             </Col>
-            <Col span={13}>
+            <Col xs={24} lg={13}>
               <Typography.Title level={5}>2. 上传填好的文件</Typography.Title>
               <Upload.Dragger
                 multiple
@@ -220,24 +220,24 @@ export default function ImportPage() {
 
         {step === 1 && batch && (
           <>
-            <Row gutter={16} style={{ marginBottom: 16 }}>
-              <Col span={4}><Statistic title={`批次 ${batch.batchNo}`} value={rows.length} suffix="行" /></Col>
-              <Col span={4}><Statistic title="通过" value={count('OK')} valueStyle={{ color: '#389e0d' }} /></Col>
-              <Col span={4}><Statistic title="需确认" value={count('WARNING')} valueStyle={{ color: '#d48806' }} /></Col>
-              <Col span={4}><Statistic title="错误" value={count('ERROR')} valueStyle={{ color: '#cf1322' }} /></Col>
-              <Col span={4}><Statistic title="重复 / 已配对" value={`${count('DUPLICATE')} / ${count('MATCHED')}`} /></Col>
-              <Col span={4}><Statistic title="将导入" value={committable.length} suffix="行" /></Col>
+            <Row gutter={[12, 12]} style={{ marginBottom: 16 }}>
+              <Col xs={12} sm={8} lg={4}><Statistic title={`批次 ${batch.batchNo}`} value={rows.length} suffix="行" /></Col>
+              <Col xs={12} sm={8} lg={4}><Statistic title="通过" value={count('OK')} valueStyle={{ color: '#389e0d' }} /></Col>
+              <Col xs={12} sm={8} lg={4}><Statistic title="需确认" value={count('WARNING')} valueStyle={{ color: '#d48806' }} /></Col>
+              <Col xs={12} sm={8} lg={4}><Statistic title="错误" value={count('ERROR')} valueStyle={{ color: '#cf1322' }} /></Col>
+              <Col xs={12} sm={8} lg={4}><Statistic title="重复 / 已配对" value={`${count('DUPLICATE')} / ${count('MATCHED')}`} /></Col>
+              <Col xs={12} sm={8} lg={4}><Statistic title="将导入" value={committable.length} suffix="行" /></Col>
             </Row>
             {count('ERROR') > 0 && (
               <Alert type="error" showIcon style={{ marginBottom: 12 }} message={`${count('ERROR')} 行有错误，不会导入。可以修改 Excel 后重新上传，或先导入其余有效行（依赖错误行资金的行会一并报错）。关闭某行的"导入"开关后系统会重新校验。`} />
             )}
-            <Space style={{ marginBottom: 12, justifyContent: 'space-between', width: '100%' }}>
+            <Space wrap style={{ marginBottom: 12, justifyContent: 'space-between', width: '100%' }}>
               <Segmented
                 value={filter}
                 onChange={(v) => setFilter(v as RowStatus | 'ALL')}
                 options={[{ label: `全部 ${rows.length}`, value: 'ALL' }, ...(Object.keys(STATUS) as RowStatus[]).filter((s) => count(s)).map((s) => ({ label: `${STATUS[s].label} ${count(s)}`, value: s }))]}
               />
-              <Space>
+              <Space wrap>
                 <Button icon={<DownloadOutlined />} onClick={errorReport}>下载校验结果</Button>
                 <Button onClick={() => (setBatch(undefined), setStep(0))}>重新上传</Button>
                 <Popconfirm title={`导入 ${committable.length} 行？`} description="提交后立即生效；如有问题可在下方导入记录中整批撤销" onConfirm={commit} disabled={!committable.length}>
@@ -328,6 +328,7 @@ export default function ImportPage() {
           size="small"
           rowKey="id"
           dataSource={batches}
+          scroll={{ x: 960 }}
           pagination={{ pageSize: 10 }}
           locale={{ emptyText: '暂无导入记录' }}
           columns={[

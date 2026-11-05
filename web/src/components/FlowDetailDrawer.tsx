@@ -7,6 +7,7 @@ import { CategorySelect, EntityTag } from './Pickers';
 import { TraceGraph } from './TraceGraph';
 import { useCanWrite, useMaps, useStore } from '@/data/store';
 import { useLots, useTraces } from '@/data/hooks';
+import { useIsMobile } from './ui';
 import { FLOW_METHOD, FLOW_STATUS, IC_NATURE, TAX_KIND, TRACE_STATUS } from '@ledger/shared/labels';
 import type { Attachment, AuditEntry, Flow, ID } from '@ledger/shared/types';
 import { money, toCents } from '@ledger/shared/format';
@@ -26,6 +27,7 @@ export function FlowDetailDrawer({ flowId, onClose, onCopy, onOpenFlow }: { flow
   const [history, setHistory] = useState<AuditEntry[]>([]);
   const [editing, setEditing] = useState(false);
   const [writingOff, setWritingOff] = useState(false);
+  const mobile = useIsMobile();
 
   const reloadSide = () => {
     if (!flowId) return;
@@ -77,9 +79,9 @@ export function FlowDetailDrawer({ flowId, onClose, onCopy, onOpenFlow }: { flow
     <Drawer
       open={!!flowId}
       onClose={onClose}
-      width={900}
+      width={mobile ? '100%' : 900}
       title={
-        <Space>
+        <Space wrap size={[8, 4]}>
           <span>流水 {f.flowNo}</span>
           <Tag color={FLOW_STATUS[f.status].color}>{FLOW_STATUS[f.status].label}</Tag>
           {f.icNature && <Tag color="magenta">集团内往来·{IC_NATURE[f.icNature]}</Tag>}
@@ -88,7 +90,7 @@ export function FlowDetailDrawer({ flowId, onClose, onCopy, onOpenFlow }: { flow
       }
       extra={
         canWrite && (
-          <Space>
+          <Space wrap>
             {onCopy && <Button icon={<CopyOutlined />} onClick={() => onCopy(f)}>复制</Button>}
             {f.status === 'CONFIRMED' && <Button icon={<EditOutlined />} onClick={() => setEditing(true)}>修改说明</Button>}
             {f.status === 'CONFIRMED' && <Button danger icon={<RollbackOutlined />} onClick={doReverse}>冲销</Button>}
@@ -97,7 +99,7 @@ export function FlowDetailDrawer({ flowId, onClose, onCopy, onOpenFlow }: { flow
       }
     >
       {f.status !== 'CONFIRMED' && <Alert type="warning" showIcon style={{ marginBottom: 12 }} message={`${FLOW_STATUS[f.status].label}：${f.reversalReason ?? ''}`} />}
-      <Descriptions size="small" column={2} bordered>
+      <Descriptions size="small" column={{ xs: 1, sm: 2 }} bordered>
         <Descriptions.Item label="日期">{f.date}</Descriptions.Item>
         <Descriptions.Item label="金额"><Typography.Text strong style={{ fontSize: 16 }}>¥{money(f.amount)}</Typography.Text></Descriptions.Item>
         <Descriptions.Item label="转出">{from.name} <EntityTag id={from.entityId} /></Descriptions.Item>
@@ -108,7 +110,7 @@ export function FlowDetailDrawer({ flowId, onClose, onCopy, onOpenFlow }: { flow
         <Descriptions.Item label="实际用途">{f.actualPurpose ?? '—'}</Descriptions.Item>
         <Descriptions.Item label="发票">{f.invoiceNos?.join('、') ?? '—'}</Descriptions.Item>
         <Descriptions.Item label="来源">{f.importBatchNo ? `导入批次 ${f.importBatchNo}` : `${f.createdBy ?? ''} 手工录入`}</Descriptions.Item>
-        <Descriptions.Item label="备注" span={2}>{f.remark ?? '—'}</Descriptions.Item>
+        <Descriptions.Item label="备注" span="filled">{f.remark ?? '—'}</Descriptions.Item>
       </Descriptions>
 
       <Typography.Title level={5} style={{ marginTop: 20 }}>项目分摊</Typography.Title>
@@ -223,7 +225,7 @@ export function FlowDetailDrawer({ flowId, onClose, onCopy, onOpenFlow }: { flow
           dataSource={attachments}
           renderItem={(a) => (
             <List.Item actions={[<a key="d" onClick={() => api.download(`/attachments/${a.id}`, a.fileName).catch((e) => message.error(e.message))}>下载</a>]}>
-              <Space><PaperClipOutlined />{a.fileName}<Typography.Text type="secondary">{(a.size / 1024).toFixed(0)} KB · {a.uploadedBy} · {new Date(a.uploadedAt).toLocaleString('zh-CN')}</Typography.Text></Space>
+              <Space wrap size={[8, 0]}><PaperClipOutlined />{a.fileName}<Typography.Text type="secondary">{(a.size / 1024).toFixed(0)} KB · {a.uploadedBy} · {new Date(a.uploadedAt).toLocaleString('zh-CN')}</Typography.Text></Space>
             </List.Item>
           )}
         />
@@ -239,7 +241,7 @@ export function FlowDetailDrawer({ flowId, onClose, onCopy, onOpenFlow }: { flow
           .slice(0, 3)
           .map((t) => (
             <div key={t.id} style={{ border: '1px solid #f0f0f0', borderRadius: 8, padding: 12, marginBottom: 12 }}>
-              <Space style={{ marginBottom: 4 }}>
+              <Space wrap style={{ marginBottom: 4 }}>
                 <Link to={`/traces/${t.id}`}>资金链 T-{flows.find((x) => x.id === t.rootFlowId)?.flowNo.slice(1)}</Link>
                 <Tag color={TRACE_STATUS[t.status].color}>{TRACE_STATUS[t.status].label}</Tag>
                 <Typography.Text type="secondary">起始 {money(t.rootAmount)}，本笔中属于该链 {money(Math.round(t.edges.find((e) => e.flowId === f.id)?.value ?? 0))}</Typography.Text>

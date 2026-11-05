@@ -1,4 +1,4 @@
-import { App as AntApp, Avatar, Badge, Button, Dropdown, Form, Input, Layout, Menu, Modal, Result, Select, Space, Spin, Tag, Typography, message } from 'antd';
+import { App as AntApp, Avatar, Badge, Button, Drawer, Dropdown, Form, Input, Layout, Menu, Modal, Result, Select, Space, Spin, Tag, Typography, message } from 'antd';
 import {
   AccountBookOutlined,
   ApartmentOutlined,
@@ -6,7 +6,9 @@ import {
   CalculatorOutlined,
   DashboardOutlined,
   DownloadOutlined,
+  MenuOutlined,
   NodeIndexOutlined,
+  WarningOutlined,
   PlusOutlined,
   ProjectOutlined,
   SettingOutlined,
@@ -19,7 +21,7 @@ import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { FlowDetailDrawer } from './components/FlowDetailDrawer';
 import { FlowFormModal } from './components/FlowFormModal';
-import { UiContext } from './components/ui';
+import { UiContext, useIsMobile } from './components/ui';
 import { useCanWrite, useStore } from './data/store';
 import { useTraces } from './data/hooks';
 import { api, setUnauthorizedHandler } from './api';
@@ -95,6 +97,11 @@ function Shell() {
   const canWrite = useCanWrite();
   const abnormal = useTraces().filter((t) => t.status === 'ABNORMAL').length;
   const [pwdOpen, setPwdOpen] = useState(false);
+  const mobile = useIsMobile();
+  const [navOpen, setNavOpen] = useState(false);
+
+  // 切换页面后自动收起手机端菜单
+  useEffect(() => setNavOpen(false), [loc.pathname]);
 
   const [formOpen, setFormOpen] = useState(false);
   const [copyFrom, setCopyFrom] = useState<Flow>();
@@ -115,27 +122,32 @@ function Shell() {
   return (
     <UiContext.Provider value={ui}>
       <Layout style={{ minHeight: '100vh' }}>
-        <Layout.Sider width={200} theme="light" style={{ borderRight: '1px solid #f0f0f0' }}>
-          <div style={{ height: 56, display: 'flex', alignItems: 'center', gap: 8, padding: '0 20px', fontWeight: 600, fontSize: 15 }}>
-            <AccountBookOutlined style={{ color: '#1677ff', fontSize: 20 }} />
-            内部账目平台
-          </div>
+        {!mobile && (
+          <Layout.Sider width={200} theme="light" style={{ borderRight: '1px solid #f0f0f0' }}>
+            <Brand />
+            <Menu mode="inline" selectedKeys={selected.length ? selected : ['/']} items={MENU} onClick={(e) => nav(e.key)} style={{ borderInlineEnd: 'none' }} />
+          </Layout.Sider>
+        )}
+        <Drawer open={mobile && navOpen} onClose={() => setNavOpen(false)} placement="left" width={240} closable={false} styles={{ body: { padding: 0 } }}>
+          <Brand />
           <Menu mode="inline" selectedKeys={selected.length ? selected : ['/']} items={MENU} onClick={(e) => nav(e.key)} style={{ borderInlineEnd: 'none' }} />
-        </Layout.Sider>
-        <Layout>
-          <Layout.Header style={{ background: '#fff', borderBottom: '1px solid #f0f0f0', padding: '0 20px', display: 'flex', alignItems: 'center', gap: 16, height: 56 }}>
-            <Space>
-              <Typography.Text type="secondary">主体</Typography.Text>
+        </Drawer>
+        <Layout style={{ minWidth: 0 }}>
+          <Layout.Header className="app-header" style={{ background: '#fff', borderBottom: '1px solid #f0f0f0', padding: mobile ? '0 10px' : '0 20px', display: 'flex', alignItems: 'center', gap: mobile ? 8 : 16, height: 56, position: mobile ? 'sticky' : undefined, top: 0, zIndex: 10 }}>
+            {mobile && <Button type="text" icon={<MenuOutlined />} onClick={() => setNavOpen(true)} aria-label="菜单" />}
+            <div style={{ flex: mobile ? 1 : undefined, minWidth: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+              {!mobile && <Typography.Text type="secondary">主体</Typography.Text>}
               <Select
                 value={scope}
                 onChange={setScope}
-                style={{ width: 280 }}
+                style={{ width: mobile ? '100%' : 280 }}
+                popupMatchSelectWidth={mobile ? 280 : true}
                 showSearch
                 optionFilterProp="label"
                 options={[{ value: 'ALL', label: `全部主体（${entities.length} 家）` }, ...entities.map((e) => ({ value: e.id, label: `${e.shortName} · ${e.taxpayerType === 'GENERAL' ? '一般纳税人' : '小规模'}` }))]}
               />
-            </Space>
-            <div style={{ flex: 1 }} />
+            </div>
+            {!mobile && <div style={{ flex: 1 }} />}
             {canWrite && (
               <Dropdown
                 menu={{
@@ -147,12 +159,14 @@ function Shell() {
                 }}
               >
                 <Button type="primary" icon={<PlusOutlined />}>
-                  新建
+                  {!mobile && '新建'}
                 </Button>
               </Dropdown>
             )}
             <Badge count={abnormal} size="small">
-              <Button onClick={() => nav('/traces?status=ABNORMAL')}>资金链异常</Button>
+              <Button icon={mobile ? <WarningOutlined /> : undefined} onClick={() => nav('/traces?status=ABNORMAL')} aria-label="资金链异常">
+                {!mobile && '资金链异常'}
+              </Button>
             </Badge>
             <Dropdown
               menu={{
@@ -167,11 +181,11 @@ function Shell() {
             >
               <Space style={{ cursor: 'pointer' }}>
                 <Avatar icon={<UserOutlined />} />
-                <span>{me.displayName}</span>
+                {!mobile && <span>{me.displayName}</span>}
               </Space>
             </Dropdown>
           </Layout.Header>
-          <Layout.Content style={{ padding: 20, background: '#f5f6f8' }}>
+          <Layout.Content style={{ padding: mobile ? 10 : 20, background: '#f5f6f8', minWidth: 0 }}>
             {/* 页面按需加载：Excel、图表等较大的依赖只在用到的页面下载 */}
             <Suspense fallback={<Spin style={{ display: 'block', marginTop: 80 }} />}>
             <Routes>
@@ -207,6 +221,15 @@ function Shell() {
       />
       <PasswordModal open={pwdOpen} onClose={() => setPwdOpen(false)} />
     </UiContext.Provider>
+  );
+}
+
+function Brand() {
+  return (
+    <div style={{ height: 56, display: 'flex', alignItems: 'center', gap: 8, padding: '0 20px', fontWeight: 600, fontSize: 15 }}>
+      <AccountBookOutlined style={{ color: '#1677ff', fontSize: 20 }} />
+      内部账目平台
+    </div>
   );
 }
 
